@@ -1,0 +1,55 @@
+module GoogleContactsApiV3
+  class Connection
+    def intialize(args)
+      @user_token = args[:user_token]
+      @user_secret = args[:user_secret]
+      @consumer_token = args[:consumer_secret]
+      @consumer_secret = args[:consumer_secret]
+    end
+
+    def ping
+      connect
+      resp = @connection.get DEFAULT_CONTACTS_PATH
+      return(resp.code.to_i == 200 || resp.code.to_i == 201)
+    end
+
+    # Retrieve all contacts from the user's Google account. If @since is
+    # not nil (and is a valid DateTime object) it will only return contacts
+    # modified since that time.
+    def get_contacts(since = nil)
+      url = DEFAULT_JSON_CONTACTS_URL
+      if since
+        updated_min = "%d-%02d-%02dT%02d:%02d:%02d" % [since.year, since.day,
+          since.month, since.hour, since.min, since.sec ]
+        url += "&updated-min=#{updated_min}"
+      end
+
+      connect
+      contacts = []
+      while 1
+        break unless url
+        resp = @connection.get url
+        return contacts unless [200, 201].include? resp.code.to_i
+        message = Response.create_from_json(JSON.parse resp.body)
+        contacts += message.feed.contacts
+        url = message.feed.next_url
+      end
+
+      contacts
+    end
+
+  private
+    def connect
+      return @connection unless @connecton.nil?
+
+      opts = {
+        :site => "https://www.google.com",
+        :scheme => :header,
+        :http_method => :post
+      }
+
+      consumer = OAuth::Consumer.new(@consumer_token, @consumer_csecret, @opt)
+      OAuth::AccessToken.new(consumer, @user_token, @user.secret)
+    end
+  end # class Connection
+end # GoogleContactsApiV3
