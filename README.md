@@ -37,7 +37,6 @@ See LICENSE for details. But basically you can do anything you damned please.
 Credit is appreciated but not necessary.
 
 ## Example Use
-<code>
     require 'GoogleContactsApiV3'
     include GoogleContactsApiV3
     connection = Connection.new(:user_token => my_users_oauth_token,
@@ -49,7 +48,6 @@ Credit is appreciated but not necessary.
 
     # Only get contacts that have been updatedin the past month
     new_contacts = connection.sync_contacts(:since => (DateTime.now - 30))
-</code>
 
 ## Testing
 By default only "cooked" parsing tests are enabled. That is, there's a .json
@@ -57,7 +55,6 @@ file in the spec/test_data directory that contains a valid, but fake response
 from the Google API. This is because we need user and consumer credentials to
 actually talk to the Google Contacts API. To set this up
 edit spec/test_data/credentials.rb as follows:
-<code>
     USER_AUTH_ATTRS = {
         :uid => user_id,        # e.g. user's gmail address
         :token => user_token,   # Taken from completed OAuth 1.0 grant
@@ -69,5 +66,3 @@ edit spec/test_data/credentials.rb as follows:
         :token => consumer_token    # Name of your app registered with Google
         :secret => consumer_secret  # Provided by Google 
     }
-</code>
-
