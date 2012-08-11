@@ -54,7 +54,7 @@ By default only "cooked" parsing tests are enabled. That is, there's a .json
 file in the spec/test_data directory that contains a valid, but fake response
 from the Google API. This is because we need user and consumer credentials to
 actually talk to the Google Contacts API. To set this up
-edit spec/test_data/credentials.rb as follows:
+edit spec/test\_data/credentials.rb as follows:
     USER_AUTH_ATTRS = {
         :uid => user_id,        # e.g. user's gmail address
         :token => user_token,   # Taken from completed OAuth 1.0 grant
