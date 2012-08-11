@@ -63,6 +63,8 @@ module GoogleContactsApiV3
     end
 
     def self.create_from_json(json_map)
+      return nil unless json_map
+
       contact = Contact.new(:id => Util.get_hash_val(json_map, 'id'),
         :updated => Util.get_hash_val(json_map, 'updated'),
         :title => Util.get_hash_val(json_map, 'title'),

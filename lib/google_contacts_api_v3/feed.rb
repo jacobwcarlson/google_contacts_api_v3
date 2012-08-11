@@ -21,6 +21,8 @@ module GoogleContactsApiV3
     end
 
     def self.create_from_json(json_map)
+      return nil unless json_map
+
       feed = Feed.new(:id_ => Util.get_hash_val(json_map, 'id'),
         :updated => Util.get_hash_val(json_map, 'updated'),
         :title => Util.get_hash_val(json_map, 'title'),
@@ -87,12 +89,20 @@ module GoogleContactsApiV3
       true
     end
 
-    def add_contact(contact)
-      return false unless contact
-      @contacts ||= []
-      @contacts.push contact
+    def add_entry(entry)
+      return false unless entry
+      @entries ||= []
+      @entries.push entry
 
       true
+    end
+
+    def add_contact(contact)
+      add_entry contact
+    end
+
+    def contacts
+      @entries
     end
 
     def next_url

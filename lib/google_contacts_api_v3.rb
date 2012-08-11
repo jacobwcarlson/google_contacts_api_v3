@@ -5,6 +5,7 @@ require 'oauth'
 module GoogleContactsApiV3
   require 'author'
   require 'category'
+  require 'connection'
   require 'contact'
   require 'contact_name'
   require 'email_address'

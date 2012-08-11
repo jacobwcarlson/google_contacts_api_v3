@@ -8,6 +8,8 @@ module GoogleContactsApiV3
     end
 
     def self.create_from_json(json_map)
+      return nil unless json_map
+
       Category.new(:scheme => json_map['scheme'], :term => json_map['term'])
     end
   end # class Category

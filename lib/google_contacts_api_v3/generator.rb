@@ -9,6 +9,8 @@ module GContactParser
     end
 
     def self.create_from_json(json_map)
+      return nil unless json_map
+
       Generator.new(:version => json_map['version'],
         :uri => json_map['uri'],
         :name => json_map['$t'])

@@ -9,6 +9,8 @@ module GoogleContactsApiV3
     end
 
     def self.create_from_json(json_map)
+      return nil unless json_map
+
       Response.new(:version => json_map['version'],
         :encoding => json_map['encoding'],
         :feed => Feed.create_from_json(json_map['feed']))

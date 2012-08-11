@@ -10,6 +10,8 @@ module GoogleContactsApiV3
     end
 
     def self.create_from_json(json_map)
+      return nil unless json_map
+
       Website.new(:href => json_map['href'],
         :description => json_map['rel'])
     end

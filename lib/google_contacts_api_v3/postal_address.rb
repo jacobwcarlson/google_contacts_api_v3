@@ -11,6 +11,8 @@ module GoogleContactsApiV3
     end
 
     def self.create_from_json(json_map)
+      return nil unless json_map
+
       PostalAddress.new(:street => get_tval(json_map, 'gd$street'),
         :formatted_address => get_tval(json_map, 'gd$formattedAddress'),
         :city => get_tval(json_map, 'gd$city'),

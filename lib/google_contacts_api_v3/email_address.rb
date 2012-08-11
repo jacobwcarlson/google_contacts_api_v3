@@ -9,6 +9,8 @@ module GoogleContactsApiV3
     end
 
     def self.create_from_json(json_map)
+      return nil unless json_map
+
       EmailAddress.new(:address => json_map['address'],
         :is_primary => (json_map['primary'] && json_map['primary'] == 'true'),
         :description => json_map['rel'].to_s.split("#").last)
