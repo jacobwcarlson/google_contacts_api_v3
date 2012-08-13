@@ -1,4 +1,4 @@
-module GContactsParser
+module GoogleContactsApiV3
   class Version #:nodoc:
     MAJOR  = 0
     MINOR  = 1
@@ -9,5 +9,5 @@ module GContactsParser
   def self.version # :nodoc:
     Version::STRING
   end 
-end # GContactsParser
+end # GoogleContactsApiV3
 
