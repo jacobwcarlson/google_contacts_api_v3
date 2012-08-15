@@ -36,8 +36,8 @@ module GoogleContactsApiV3
         resp = @connection.get path
         return contacts unless [200, 201].include? resp.code.to_i
         @message = Response.create_from_json(JSON.parse resp.body)
-        contacts += message.feed.contacts
-        path = message.feed.next_url
+        contacts += @message.feed.contacts
+        path = @message.feed.next_url
       end
 
       contacts

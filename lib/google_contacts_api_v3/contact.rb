@@ -98,6 +98,8 @@ module GoogleContactsApiV3
       json_map['gd$website'].to_a.each do |website|
         contact.add_website(Website.create_from_json website)
       end
+
+      contact
     end
   end # class Contact
 end # module GoogleContactsApiV3
