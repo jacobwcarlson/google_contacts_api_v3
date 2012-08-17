@@ -3,9 +3,10 @@ module GoogleContactsApiV3
   include GoogleContactsApiV3::Util
 
   class Contact
-    attr_reader :id_, :updated, :categories, :title, :email_addresses
+    attr_reader :id_, :name, :updated, :categories, :title, :email_addresses
     attr_accessor :photo_href
     attr_reader :birthday, :notes, :phone_numbers, :postal_addresses
+    attr_reader :websites
 
     def initialize(args)
       @id_ = args[:id_]
@@ -16,7 +17,7 @@ module GoogleContactsApiV3
       @name = args[:name]
       @categories = args[:categories]
       @email_addresses = args[:email_addresses]
-      @photo_href = args[:photo_hreg]
+      @photo_href = args[:photo_href]
       @phone_numbers = args[:phone_numbers]
       @postal_addresses = args[:postal_addresses]
       @websites = args[:websites]
@@ -57,7 +58,7 @@ module GoogleContactsApiV3
     def add_website(website)
       return false unless website
       @websites ||= []
-      @websites.push phone
+      @websites.push website
 
       true
     end
@@ -91,11 +92,11 @@ module GoogleContactsApiV3
         contact.add_phone_number phone['$t']
       end
 
-      json_map['gd$structredPostalAddress'].to_a.each do |addr|
+      json_map['gd$structuredPostalAddress'].to_a.each do |addr|
         contact.add_postal_address(PostalAddress.create_from_json addr)
       end
 
-      json_map['gd$website'].to_a.each do |website|
+      json_map['gContact$website'].to_a.each do |website|
         contact.add_website(Website.create_from_json website)
       end
 

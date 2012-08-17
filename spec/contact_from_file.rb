@@ -65,6 +65,35 @@ describe GoogleContactsApiV3 do
   end
 
   it "should have correct contact details" do
-    pending "Just need to stop being lazy."
+    response = GoogleContactsApiV3::Response.create_from_json @fake_json_response
+    test_contact = response.feed.contacts.first
+
+    test_contact.title.should eq "Test Contact"
+    test_contact.notes.should eq "Lorem Ipsum whatever"
+    test_contact.birthday.should eq "1960-01-01"
+
+    test_contact.name.full_name.should eq "Test Contact"
+    test_contact.name.given_name.should eq "Test"
+    test_contact.name.family_name.should eq "Contact"
+
+    test_contact.email_addresses[0].
+      address.should eq "test.contact@example.com"
+    test_contact.email_addresses[0].is_primary.should be_true
+    test_contact.email_addresses[0].description.should eq "other"
+
+    test_contact.photo_href.should eq "https://www.google.com/m8/feeds/photos/media/sometestaccount%40gmail.com/3a70bf6e8856b5e5?v=3"
+
+    test_contact.phone_numbers.first.should eq "(212)555 1337"
+
+    test_contact.postal_addresses[0].
+      formatted_address.should eq "1 Penn Plaza\nNew York\nNew York"
+    test_contact.postal_addresses[0].street.should eq "1 Penn Plaza"
+    test_contact.postal_addresses[0].city.should eq "New York"
+    test_contact.postal_addresses[0].region.should eq "New York"
+
+    test_contact.websites[0].href.should eq "www.example.com"
+    test_contact.websites[0].description.should eq "work"
+    test_contact.websites[1].href.should eq "myblog.example.com"
+    test_contact.websites[1].description.should eq "blog"
   end
 end
