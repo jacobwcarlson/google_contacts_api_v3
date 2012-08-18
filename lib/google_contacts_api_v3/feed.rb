@@ -23,13 +23,13 @@ module GoogleContactsApiV3
     def self.create_from_json(json_map)
       return nil unless json_map
 
-      feed = Feed.new(:id_ => Util.get_hash_val(json_map, 'id'),
-        :updated => Util.get_hash_val(json_map, 'updated'),
-        :title => Util.get_hash_val(json_map, 'title'),
-        :total_results => Util.get_hash_val(json_map,
+      feed = Feed.new(:id_ => Util.get_text_val(json_map, 'id'),
+        :updated => Util.get_text_val(json_map, 'updated'),
+        :title => Util.get_text_val(json_map, 'title'),
+        :total_results => Util.get_text_val(json_map,
           'openSearch$totalResults'),
-        :start_index => Util.get_hash_val(json_map, 'openSearch$startIndex'),
-        :items_per_page => Util.get_hash_val(json_map,
+        :start_index => Util.get_text_val(json_map, 'openSearch$startIndex'),
+        :items_per_page => Util.get_text_val(json_map,
           'openSearch$itemsPerPage'))
 
       feed.add_namespace json_map['xmlns']

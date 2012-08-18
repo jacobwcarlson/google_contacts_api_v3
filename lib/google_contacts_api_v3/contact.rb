@@ -4,22 +4,25 @@ module GoogleContactsApiV3
 
   class Contact
     attr_reader :id_, :name, :updated, :categories, :title, :email_addresses
-    attr_accessor :photo_href
     attr_reader :birthday, :notes, :phone_numbers, :postal_addresses
-    attr_reader :websites
+    attr_reader :websites, :nickname, :organizations, :ims, :events
+    attr_accessor :photo_href
 
     def initialize(args)
-      @id_ = args[:id_]
-      @updated = args[:updated]
-      @title = args[:title]
-      @notes = args[:notes]
       @birthday = args[:birthday]
-      @name = args[:name]
       @categories = args[:categories]
       @email_addresses = args[:email_addresses]
-      @photo_href = args[:photo_href]
+      @events = args[:events]
+      @id_ = args[:id_]
+      @name = args[:name]
+      @nickname = args[:nickname]
+      @notes = args[:notes]
+      @organization = args[:organization]
       @phone_numbers = args[:phone_numbers]
+      @photo_href = args[:photo_href]
       @postal_addresses = args[:postal_addresses]
+      @title = args[:title]
+      @updated = args[:updated]
       @websites = args[:websites]
     end
 
@@ -63,14 +66,39 @@ module GoogleContactsApiV3
       true
     end
 
+    def add_organization(organization)
+      return false unless organization
+      @organizations ||= []
+      @organizations.push organization
+
+      true
+    end
+
+    def add_im(im)
+      return false unless im
+      @ims ||= []
+      @ims.push im
+
+      true
+    end
+
+    def add_event(event)
+      return false unless event
+      @events ||= []
+      @events.push event
+
+      true
+    end
+
     def self.create_from_json(json_map)
       return nil unless json_map
 
-      contact = Contact.new(:id => Util.get_hash_val(json_map, 'id'),
-        :updated => Util.get_hash_val(json_map, 'updated'),
-        :title => Util.get_hash_val(json_map, 'title'),
-        :notes => Util.get_hash_val(json_map, 'content'),
-        :birthday => Util.get_hash_val(json_map, 'gContact$birthday', 'when'),
+      contact = Contact.new(:id => Util.get_text_val(json_map, 'id'),
+        :updated => Util.get_text_val(json_map, 'updated'),
+        :title => Util.get_text_val(json_map, 'title'),
+        :notes => Util.get_text_val(json_map, 'content'),
+        :birthday => Util.get_text_val(json_map, 'gContact$birthday', 'when'),
+        :nickname => Util.get_text_val(json_map, "gContact$nickname"),
         :name => ContactName.create_from_json(json_map['gd$name']))
 
       json_map['category'].to_a.each do |category|
@@ -89,7 +117,7 @@ module GoogleContactsApiV3
       end
 
       json_map['gd$phoneNumber'].to_a.each do |phone|
-        contact.add_phone_number phone['$t']
+        contact.add_phone_number(PhoneNumber.create_from_json phone)
       end
 
       json_map['gd$structuredPostalAddress'].to_a.each do |addr|
@@ -98,6 +126,18 @@ module GoogleContactsApiV3
 
       json_map['gContact$website'].to_a.each do |website|
         contact.add_website(Website.create_from_json website)
+      end
+
+      json_map['gd$organization'].to_a.each do |organization|
+        contact.add_organization(Organization.create_from_json organization)
+      end
+
+      json_map['gd$im'].to_a.each do |im|
+        contact.add_im(Im.create_from_json im)
+      end
+
+      json_map['gContact$event'].to_a.each do |event|
+        contact.add_event(Event.create_from_json event)
       end
 
       contact

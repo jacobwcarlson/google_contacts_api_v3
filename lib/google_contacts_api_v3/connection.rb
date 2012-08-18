@@ -9,6 +9,8 @@ module GoogleContactsApiV3
       @user_secret = args[:user_secret]
       @consumer_token = args[:consumer_token]
       @consumer_secret = args[:consumer_secret]
+
+      true
     end
 
     def ping
@@ -24,11 +26,12 @@ module GoogleContactsApiV3
       path = DEFAULT_JSON_CONTACTS_PATH
       if args[:since]
         updated_min = "%d-%02d-%02dT%02d:%02d:%02d" % [args[:since].year,
-          args[:since].day, args[:since].month, args[:since].hour,
+          args[:since].month, args[:since].day, args[:since].hour,
           args[:since].min, args[:since].sec ]
         path += "&updated-min=#{updated_min}"
       end
 
+      path += "&max-results=1000"
       connect
       contacts = []
       while 1
@@ -36,7 +39,7 @@ module GoogleContactsApiV3
         resp = @connection.get path
         return contacts unless [200, 201].include? resp.code.to_i
         @message = Response.create_from_json(JSON.parse resp.body)
-        contacts += @message.feed.contacts
+        contacts += @message.feed.contacts.to_a
         path = @message.feed.next_url
       end
 

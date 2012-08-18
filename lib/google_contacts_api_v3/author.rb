@@ -12,8 +12,8 @@ module GoogleContactsApiV3
     def self.create_from_json(json_map)
       return nil unless json_map
 
-      Author.new(:name => Util.get_hash_val(json_map, 'name'),
-                 :email => Util.get_hash_val(json_map, 'email'))
+      Author.new(:name => Util.get_text_val(json_map, 'name'),
+                 :email => Util.get_text_val(json_map, 'email'))
     end
   end # class Author
 end #module GoogleContactsApiV3
