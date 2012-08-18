@@ -6,6 +6,9 @@ to their own contacts. If that's what you're after it should be pretty
 straight-forward to modify Connection::connect and just leverage the parsing
 code that the rest of the library provides.
 
+Additionally, it's read-only at this point; it doesn't have any functionality
+to create/update/delete contacts.
+
 If you've never registered an application with Google you can read more about
 the process here: https://developers.google.com/console/help/#WhatIsKey
 
