@@ -1,5 +1,9 @@
 # Google Contacts API V3 for Ruby
 
+**IMPORTANT**
+**This code should not be considered, in any way, stable or static. It is
+still very much in early development and may change drastically.**
+
 A Rubyesque interface to the Google Contacts API (version 3). It provides
 Applications access to their users' contacts, not access for individual users
 to their own contacts. If that's what you're after it should be pretty
