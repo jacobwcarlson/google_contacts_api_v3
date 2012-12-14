@@ -17,6 +17,7 @@ module GoogleContactsApiV3
   require 'link'
   require 'organization'
   require 'phone_number'
+  require 'photo'
   require 'postal_address'
   require 'response'
   require 'version'
