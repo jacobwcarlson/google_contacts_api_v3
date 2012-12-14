@@ -36,7 +36,7 @@ module GoogleContactsApiV3
       contacts = []
       while 1
         break unless path
-        resp = @connection.get(path)
+        resp = @connection.get path
         return contacts unless [200, 201].include? resp.code.to_i
         @message = Response.create_from_json(JSON.parse resp.body)
         contacts += @message.feed.contacts.to_a
@@ -44,20 +44,6 @@ module GoogleContactsApiV3
       end
 
       contacts
-    end
-
-    def get_photo_data(photo, unless_etag = nil)
-      return photo unless photo.etag
-      return photo unless_tag != photo.etag
-
-      resp = @connection.get(photo.href)
-      if [200, 201].include? resp.code.to_i
-        photo.data = resp.body
-        photo.content_type = resp['Content-Type']
-        photo.etag = resp['etag']
-      end
-
-      photo
     end
 
   private
