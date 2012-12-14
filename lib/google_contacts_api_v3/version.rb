@@ -2,7 +2,7 @@ module GoogleContactsApiV3
   class Version #:nodoc:
     MAJOR  = 0
     MINOR  = 1
-    PATCH  = 5
+    PATCH  = 6
     STRING = [MAJOR, MINOR, PATCH].join('.')
   end # Version
   
