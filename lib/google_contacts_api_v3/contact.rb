@@ -6,7 +6,7 @@ module GoogleContactsApiV3
     attr_reader :id_, :name, :updated, :categories, :title, :email_addresses
     attr_reader :birthday, :notes, :phone_numbers, :postal_addresses
     attr_reader :websites, :nickname, :organizations, :ims, :events
-    attr_accessor :photo_href
+    attr_accessor :photo_href, :photo_etag
 
     def initialize(args)
       @birthday = args[:birthday]
@@ -112,6 +112,7 @@ module GoogleContactsApiV3
       json_map['link'].to_a.each do |link|
         if link['rel'].to_s =~ /rel#photo$/
           contact.photo_href = link['href']
+          contact.photo_etag = link['gd$etag']
           break
         end
       end
