@@ -1,6 +1,7 @@
 $:.unshift File.join(File.dirname(__FILE__), '.', './google_contacts_api_v3')
 require 'json'
 require 'oauth'
+require 'oauth2'
 require 'date'
 
 module GoogleContactsApiV3

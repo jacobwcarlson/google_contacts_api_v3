@@ -1,22 +1,21 @@
 module GoogleContactsApiV3
+  class UnsupportedOAuthVersion < StandardError ; end
+
   class Connection
     DEFAULT_JSON_CONTACTS_PATH = "/m8/feeds/contacts/default/full?alt=json&v=3"
 
     attr_reader :message
 
     def initialize(args)
-      @user_token = args[:user_token]
-      @user_secret = args[:user_secret]
-      @consumer_token = args[:consumer_token]
-      @consumer_secret = args[:consumer_secret]
-
-      true
+      @access_token = args[:access_token]
+      @client_id = args[:client_id]
+      @client_secret = args[:client_secret]
     end
 
     def ping
       connect
       resp = @connection.get DEFAULT_JSON_CONTACTS_PATH
-      return(resp.code.to_i == 200 || resp.code.to_i == 201)
+      return(resp.status == 200 || resp.status == 201)
     end
 
     # Retrieve all contacts from the user's Google account. If args[:since]
@@ -37,7 +36,7 @@ module GoogleContactsApiV3
       while 1
         break unless path
         resp = @connection.get path
-        return contacts unless [200, 201].include? resp.code.to_i
+        return contacts unless [200, 201].include? resp.status
         @message = Response.create_from_json(JSON.parse resp.body)
         contacts += @message.feed.contacts.to_a
         path = @message.feed.next_url
@@ -56,8 +55,8 @@ module GoogleContactsApiV3
         :http_method => :post
       }
 
-      consumer = OAuth::Consumer.new(@consumer_token, @consumer_secret, opts)
-      @connection = OAuth::AccessToken.new(consumer, @user_token, @user_secret)
+      client = OAuth2::Client.new(@client_id, @client_secret, opts)
+      @connection = OAuth2::AccessToken.new(client, @access_token)
     end
   end # class Connection
 end # GoogleContactsApiV3
