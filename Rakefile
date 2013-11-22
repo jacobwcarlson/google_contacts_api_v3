@@ -1,19 +1,7 @@
 # -*- ruby -*-
-
 $:.unshift(File.expand_path('../lib', __FILE__))
+require 'rake/testtask'
 require 'google_contacts_api_v3/version'
-
-begin
-  require 'rspec/core/rake_task'
-  RSpec::Core::RakeTask.new(:spec)
-rescue LoadError
-  task :spec do
-    abort 'Run `gem install rspec` to install RSpec'
-  end
-end
-
-task :test => :spec
-task :default => :test
 
 begin 
   require 'json'
@@ -23,16 +11,14 @@ rescue LoadError
 end
 
 begin 
-  require 'oauth'
+  require 'oauth2'
 rescue LoadError
-  STDERR.puts e.message
-  STDERR.puts "Run `gem install oauth` to install oauth"
+  STDERR.puts "Run `gem install oauth2` to install oauth2"
 end
 
-require 'rdoc/task'
-Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "Google Contacts Parser for Ruby #{GoogleContactsApiV3.version}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+
+Rake::TestTask.new do |t|
+  t.libs << "test"
+  t.test_files = FileList['test/test_*.rb']
+  t.verbose = true
 end
