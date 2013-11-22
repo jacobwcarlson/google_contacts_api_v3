@@ -16,6 +16,6 @@ Gem::Specification.new do |s|
   s.require_paths = %w[lib]
   s.extra_rdoc_files = %w[LICENSE README.md]
 
-  s.add_runtime_dependency 'json', ['>= 0.1']
+  s.add_runtime_dependency 'json'
   s.add_runtime_dependency 'oauth2', ['>= 0.8.0']
 end
