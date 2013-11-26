@@ -2,99 +2,76 @@ module GoogleContactsApiV3
   require 'util'
 
   class Feed
-    attr_reader :namespaces, :id_, :updated, :categories, :title, :links
-    attr_reader :authors, :total_results, :start_index, :items_per_page
-    attr_reader :entries
+    attr_accessor :namespaces, :id_, :updated, :categories, :title, :links
+    attr_accessor :authors, :total_results, :start_index, :items_per_page
+    attr_accessor :entries
 
-    def initialize(args = {})
-      @id_ = args[:id_]
-      @updated = args[:updated]
-      @title = args[:title]
-      @total_results = args[:total_results]
-      @start_index = args[:start_index]
-      @items_per_page = args[:items_per_page]
-      @namespaces = args[:namespaces]
-      @categories = args[:categories]
-      @authors = args[:authors]
-      @links = args[:links]
-      @entries = args[:entries]
-    end
+    def self.create_from_json(json)
+      Feed.new.tap do |feed|
+        feed.id_ = json.andand['id']['$t']
+        feed.updated = DateTime.parse(json.andand['updated']['$t'])
+        feed.title = json.andand['title']['$t']
+        feed.total_results = json.andand['openSearch$totalResults']['$t'].to_i
+        feed.start_index = json.andand['openSearch$startIndex']['$t'].to_i
+        feed.items_per_page = json.andand['openSearch$itemsPerPage']['$t'].to_i
 
-    def self.create_from_json(json_map)
-      return nil unless json_map
+        feed.add_namespace json['xmlns']
+        feed.add_namespace json['xmlns$openSearch']
+        feed.add_namespace json['xmlns$gContact']
+        feed.add_namespace json['xmlns$batch']
+        feed.add_namespace json['xmlns$gd']
 
-      feed = Feed.new(:id_ => Util.get_text_val(json_map, 'id'),
-        :updated => Util.get_text_val(json_map, 'updated'),
-        :title => Util.get_text_val(json_map, 'title'),
-        :total_results => Util.get_text_val(json_map,
-          'openSearch$totalResults'),
-        :start_index => Util.get_text_val(json_map, 'openSearch$startIndex'),
-        :items_per_page => Util.get_text_val(json_map,
-          'openSearch$itemsPerPage'))
+        json['category'].andand.each do |category|
+          feed.add_category Category.create_from_json(category)
+        end
 
-      feed.add_namespace json_map['xmlns']
-      feed.add_namespace json_map['xmlns$openSearch']
-      feed.add_namespace json_map['xmlns$gContact']
-      feed.add_namespace json_map['xmlns$batch']
-      feed.add_namespace json_map['xmlns$gd']
+        json['author'].andand.each do |author|
+          feed.add_author Author.create_from_json(author)
+        end
 
-      json_map['category'].to_a.each do |category|
-        feed.add_category(Category.create_from_json category)
-      end
+        json['link'].andand.each do |link|
+          feed.add_link Link.create_from_json(link)
+        end
 
-      json_map['author'].to_a.each do |author|
-        feed.add_author(Author.create_from_json author)
-      end
-
-      json_map['link'].to_a.each do |link|
-        feed.add_link(Link.create_from_json link)
-      end
-
-      json_map['entry'].to_a.each do |entry|
-        feed.add_contact(Contact.create_from_json entry)
-      end
-
-      feed
+        json['entry'].andand.each do |entry|
+          feed.add_contact Contact.create_from_json(entry)
+        end
+      end.freeze 
     end
 
     def add_namespace(namespace)
-      @namespaces ||= []
-      return false unless namespace
-      @namespaces.push namespace
-
-      true
+      namespace.andand.tap do |namespace|
+        @namespaces ||= []
+        @namespaces.push namespace
+      end
     end
 
     def add_category(category)
-      return false unless category
-      @categories ||= []
-      @categories.push category
-
-      true
+      category.andand.tap do |category|
+        @categories ||= []
+        @categories.push category
+      end
     end
 
     def add_author(author)
-      return false unless author
-      @authors ||= []
-      @authors.push author
-
-      true
+      author.andand.tap do |author|
+        @authors ||= []
+        @authors.push author
+      end
     end
 
     def add_link(link)
-      return false unless link
-      @links ||= []
-      @links.push link
-
-      true
+      link.andand.tap do |link|
+        @links ||= []
+        @links.push link
+      end
     end
 
     def add_entry(entry)
-      return false unless entry
-      @entries ||= []
-      @entries.push entry
-
-      true
+      entry.andand.tap do |entry|
+        @entries ||= []
+        @entries.push entry
+      end
     end
 
     def add_contact(contact)

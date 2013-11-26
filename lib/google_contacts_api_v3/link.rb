@@ -1,18 +1,13 @@
 module GoogleContactsApiV3
   class Link
-    attr_reader :rel, :type, :href
+    attr_accessor :rel, :type, :href
 
-    def initialize(args)
-      @rel = args[:rel]
-      @type = args[:type]
-      @href = args[:href]
-    end
-
-    def self.create_from_json(json_map)
-      return nil unless json_map
-
-      Link.new(:rel => json_map['rel'], :type => json_map['type'],
-        :href => json_map['href'])
+    def self.create_from_json(json)
+      Link.new.tap do |link|
+        link.rel = json.andand['rel']
+        link.type = json.andand['type']
+        link.href = json.andand['href']
+      end.freeze
     end
   end # class Link
 end # module GContactParser

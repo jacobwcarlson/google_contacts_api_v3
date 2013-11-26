@@ -3,60 +3,36 @@
 module GoogleContactsApiV3
   require 'util'
   class PostalAddress
-    attr_reader :formatted_address, :street, :city, :region
-    attr_reader :rel, :mail_class, :usage, :label, :primary
-    attr_reader :agent, :housename, :pobox, :neighborhood
-    attr_reader :subregion, :post_code, :country, :rel
-    alias :type :rel
+    attr_accessor :formatted_address, :street, :city, :region
+    attr_accessor :rel, :mail_class, :usage, :label, :primary
+    attr_accessor :agent, :housename, :pobox, :neighborhood
+    attr_accessor :subregion, :post_code, :country, :rel, :type
 
-    def initialize(args)
-      @agent = args[:agent]
-      @city = args[:city]
-      @country = args[:country]
-      @formatted_address = args[:formatted_address]
-      @housename = args[:housename]
-      @label = args[:label]
-      @mail_class = args[:mail_class]
-      @neighborhood = args[:neighborhood]
-      @pobox = args[:pobox]
-      @post_code = args[:post_code]
-      @primary = args[:primary]
-      @region = args[:region]
-      @rel = args[:rel]
-      @street = args[:street]
-      @subregion = args[:subregion]
-      @usage = args[:usage]
-
-      @label ||= @rel
+    def initialize
+      @mail_class ||= "both"
+      @primary ||= false
     end
 
-    def self.create_from_json(json_map)
-      return nil unless json_map
-
-      # The country field can have a 'code', a '$t', or both.
-      # The Code is preferable so look for that first.
-      country = nil
-      if json_map['gd$country']
-        country = json_map['gd$country']['code']
-        country ||= json_map['gd$country']['$t']
-      end
-      PostalAddress.new(:agent => Util.get_text_val(json_map, "gd$agent"),
-        :city => Util.get_text_val(json_map, "gd$city"),
-        :country => country,
-        :housename => Util.get_text_val(json_map, "gd$housename"),
-        :label => Util.get_text_val(json_map, "label"),
-        :mail_class => Util.get_text_val(json_map, "mailClass"),
-        :neighborhood => Util.get_text_val(json_map, "gd$neighborhood"),
-        :pobox => Util.get_text_val(json_map, "gd$pobox"),
-        :post_code => Util.get_text_val(json_map, "gd$postcode"),
-        :primary => Util.get_text_val(json_map, "primary"),
-        :region => Util.get_text_val(json_map, "gd$region"),
-        :rel => json_map["rel"].to_s.split("#").last,
-        :street => Util.get_text_val(json_map, "gd$street"),
-        :subregion => Util.get_text_val(json_map, "gd$subregion"),
-        :usage => Util.get_text_val(json_map, "usage"),
-        :formatted_address => Util.get_text_val(json_map,
-                                                "gd$formattedAddress"))
+    def self.create_from_json(json)
+      PostalAddress.new.tap do |address|
+        address.agent = json['gd$agent']
+        address.city = json['gd$city']
+        address.country = json['gd$country'].andand{|c| c['code'] || c['$t']}
+        address.housename = json['gd$housename']
+        address.label = json['label']
+        address.mail_class = json['mailClass']
+        address.neighborhood = json['gd$neighborhood']
+        address.pobox = json['gd$pobox']
+        address.post_code = json['gd$postcode']
+        address.primary = json['primary'] == "true"
+        address.region = json['gd$region']
+        address.rel = json["rel"]
+        address.type = json["rel"].to_s.split("#").last,
+        address.street = json['gd$street']
+        address.subregion = json['gd$subregion']
+        address.usage = json['usage']
+        address.formatted_address = json['gd$formattedAddress']
+      end.freeze
     end
   end # class PostalAddress
 end # module GoogleContactsApiV3

@@ -1,16 +1,12 @@
 module GoogleContactsApiV3
   class Category
-    attr_reader :scheme, :term
+    attr_accessor :scheme, :term
 
-    def initialize(args)
-      @scheme = args[:scheme]
-      @term = args[:term]
-    end
-
-    def self.create_from_json(json_map)
-      return nil unless json_map
-
-      Category.new(:scheme => json_map['scheme'], :term => json_map['term'])
+    def self.create_from_json(json)
+      Category.new.tap do |category|
+        category.scheme = json.andand['scheme']
+        category.term = json.andand['term']
+      end.freeze
     end
   end # class Category
 end # module GContactParser

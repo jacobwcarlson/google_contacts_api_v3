@@ -13,24 +13,18 @@ module GoogleContactsApiV3
     end
 
     def ping
-      connect
-      resp = @connection.get DEFAULT_JSON_CONTACTS_PATH
-      return(resp.status == 200 || resp.status == 201)
+      [200, 201].include? connect.get(DEFAULT_JSON_CONTACTS_PATH).status
     end
 
     # Retrieve all contacts from the user's Google account. If args[:since]
     # is not nil (and is a valid DateTime object) it will only return contacts
     # modified since that time.
     def get_contacts(args = {})
-      path = DEFAULT_JSON_CONTACTS_PATH
-      if args[:since]
-        updated_min = "%d-%02d-%02dT%02d:%02d:%02d" % [args[:since].year,
-          args[:since].month, args[:since].day, args[:since].hour,
-          args[:since].min, args[:since].sec ]
-        path += "&updated-min=#{updated_min}"
+      path = DEFAULT_JSON_CONTACTS_PATH.tap do |path|
+        path.concat "&updated-min=" + args[:since].andand.iso8601
+        path.concat "&max-results=1000"
       end
 
-      path += "&max-results=1000"
       connect
       contacts = []
       while 1
