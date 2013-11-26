@@ -7,4 +7,12 @@ class TestDataLoader
     @@test_data ||= {}
     @@test_data[fname] ||= JSON.parse(File.read("#{TEST_DATA_DIR}/#{fname}"))
   end
+
+  def self.test_response
+    self['fake_response.json']
+  end
+
+  def self.test_response_entries
+    self.test_response['feed']['entry']
+  end
 end
