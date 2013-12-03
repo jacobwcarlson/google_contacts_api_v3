@@ -1,29 +1,19 @@
 # See https://developers.google.com/google-apps/contacts/v3/reference#gcEvent
 # for details on what these field mean
 module GoogleContactsApiV3
-  require 'util'
-
   class Event
-    attr_reader :label, :rel, :when
+    attr_accessor :label, :rel, :when
     alias :event_time :when
 
-    def initialize(args)
-      @label = args[:label]
-      @rel = args[:rel]
-      @when = args[:when]
+    def self.create_from_json(json)
+      Event.new.tap do |event|
+        json['gd$when'].andand['startTime'].andand.tap do |event_time|
+          event.when = DateTime.parse(event_time)
+        end
 
-      @label ||= @rel
-    end
-
-    def self.create_from_json(json_map)
-      event_time = nil
-      if json_map['gd$when'] && json_map['gd$when']['startTime']
-        event_time = DateTime.parse(json_map['gd$when']['startTime'])
-      end
-
-      Event.new(:label => json_map['label'],
-        :rel => json_map['rel'],
-        :when => event_time)
+        event.label = json['label']
+        event.rel = json['rel']
+      end.freeze
     end
   end # class Event
 end # module GoogleContactsApiV3
