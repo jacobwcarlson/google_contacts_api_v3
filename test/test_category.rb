@@ -3,13 +3,10 @@ $LOAD_PATH.push File.dirname __FILE__
 require 'minitest/autorun'
 require 'support/support'
 
-include GoogleContactsApiV3
-
-class TestFeed < MiniTest::Unit::TestCase
+class TestCategory < MiniTest::Unit::TestCase
   def setup
     @json = TestDataLoader.test_response['feed']['category']
   end
-
 
   def test_create_from_json
     @json.each do |json_category|

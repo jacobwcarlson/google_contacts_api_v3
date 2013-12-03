@@ -4,7 +4,7 @@ require 'minitest/autorun'
 require 'support/support'
 require 'pry'
 
-class TestContact < MiniTest::Unit::TestCase
+class TestPhoneNumber < MiniTest::Unit::TestCase
   def setup
     @jsons= TestDataLoader.test_response_entries.map do |entry|
       entry['gd$phoneNumber']
