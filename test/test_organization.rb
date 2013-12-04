@@ -11,6 +11,10 @@ class TestOrganization < MiniTest::Unit::TestCase
     end.compact.flatten
   end
 
+  def test_nil_json
+    assert_nil Contact.create_from_json nil
+  end
+
   def test_create_from_json
     @jsons.each do |json|
       Organization.create_from_json(json).tap do |org|

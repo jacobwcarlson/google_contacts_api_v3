@@ -11,6 +11,10 @@ class TestContactName < MiniTest::Unit::TestCase
     end.compact
   end
 
+  def test_nil_json
+    assert_nil Contact.create_from_json nil
+  end
+
   def test_create_from_json
     @jsons.each do |json|
       ContactName.create_from_json(json) do |name|

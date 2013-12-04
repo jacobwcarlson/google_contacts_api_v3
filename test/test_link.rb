@@ -10,6 +10,10 @@ class TestLink < MiniTest::Unit::TestCase
     @json = TestDataLoader.test_response['feed']['link']
   end
 
+  def test_nil_json
+    assert_nil Contact.create_from_json nil
+  end
+
   def test_create_from_json
     @json.each do |json_link|
       link = Link.create_from_json(json_link).tap do |link|

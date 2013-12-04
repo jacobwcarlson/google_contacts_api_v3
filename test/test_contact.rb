@@ -9,6 +9,10 @@ class TestContact < MiniTest::Unit::TestCase
     @json = TestDataLoader.test_response['feed']['entry']
   end
 
+  def test_nil_json
+    assert_nil Contact.create_from_json nil
+  end
+
   def test_create_from_json
     @json.each do |json_contact|
       contact = Contact.create_from_json(json_contact).tap do |contact|

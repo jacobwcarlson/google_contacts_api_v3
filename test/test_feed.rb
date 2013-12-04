@@ -9,6 +9,10 @@ class TestFeed < MiniTest::Unit::TestCase
     @json = TestDataLoader.test_response['feed']
   end
 
+  def test_nil_json
+    assert_nil Contact.create_from_json nil
+  end
+
   def test_create_from_json
     GoogleContactsApiV3::Feed.create_from_json(@json).tap do |feed|
       assert_equal feed.id_, @json['id']['$t']

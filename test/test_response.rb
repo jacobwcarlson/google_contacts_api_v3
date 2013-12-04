@@ -8,6 +8,10 @@ class TestResponse < MiniTest::Unit::TestCase
     @json = TestDataLoader.test_response
   end
 
+  def test_nil_json
+    assert_nil Contact.create_from_json nil
+  end
+
   def test_create_from_json
     Response.create_from_json(@json).tap do |response|
       assert_equal response.version, @json['version']
