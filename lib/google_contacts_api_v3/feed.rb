@@ -7,6 +7,8 @@ module GoogleContactsApiV3
     attr_accessor :entries
 
     def self.create_from_json(json)
+      return nil unless json
+
       Feed.new.tap do |feed|
         feed.id_ = json.andand['id']['$t']
         feed.updated = DateTime.parse(json.andand['updated']['$t'])

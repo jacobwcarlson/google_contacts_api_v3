@@ -1,19 +1,15 @@
 module GContactParser
   class Generator
-    attr_reader :version, :uri, :name
+    attr_accessor :version, :uri, :name
 
-    def initialize(args)
-      @version = args[:version]
-      @uri = args[:uri]
-      @name = args[:name]
-    end
+    def self.create_from_json(json)
+      return nil unless json
 
-    def self.create_from_json(json_map)
-      return nil unless json_map
-
-      Generator.new(:version => json_map['version'],
-        :uri => json_map['uri'],
-        :name => json_map['$t'])
+      Generator.new.tap do |generator|
+        generator.version = json_map['version']
+        generator.uri = json_map['uri']
+        generator.name = json_map['$t']
+      end.freeze
     end
   end # class Generator
 end # module GContactParser

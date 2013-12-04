@@ -20,6 +20,8 @@ module GoogleContactsApiV3
     end
 
     def self.create_from_json(json)
+      return nil unless json
+
       Contact.new.tap do |contact|
         contact.id_ = json['id'].andand['$t']
         contact.updated = json['updated'].andand['$t']

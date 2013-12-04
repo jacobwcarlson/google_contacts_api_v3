@@ -11,6 +11,8 @@ module GoogleContactsApiV3
     end
 
     def self.create_from_json(json)
+      return nil unless json
+
       PhoneNumber.new.tap do |phone|
         phone.label = json['label']
         phone.type = json['rel'].to_s.split("#").last

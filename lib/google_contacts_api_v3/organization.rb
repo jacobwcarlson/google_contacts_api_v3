@@ -16,6 +16,8 @@ module GoogleContactsApiV3
     alias :title :org_title
 
     def self.create_from_json(json)
+      return nil unless json
+
       Organization.new.tap do |organization|
         organization.label = json['label']
         organization.primary = json['primary'] == "true"

@@ -14,6 +14,8 @@ module GoogleContactsApiV3
     end
 
     def self.create_from_json(json)
+      return nil unless json
+
       PostalAddress.new.tap do |address|
         address.agent = json['gd$agent']
         address.city = json['gd$city']

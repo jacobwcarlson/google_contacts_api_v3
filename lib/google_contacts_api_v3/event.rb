@@ -6,9 +6,11 @@ module GoogleContactsApiV3
     alias :event_time :when
 
     def self.create_from_json(json)
+      return nil unless json
+
       Event.new.tap do |event|
-        json['gd$when'].andand['startTime'].andand.tap do |event_time|
-          event.when = DateTime.parse(event_time)
+        event.when = json['gd$when'].andand['startTime'].andand do |start_time|
+          DateTime.parse(start_time)
         end
 
         event.label = json['label']

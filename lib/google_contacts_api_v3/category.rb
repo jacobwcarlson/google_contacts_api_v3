@@ -3,6 +3,8 @@ module GoogleContactsApiV3
     attr_accessor :scheme, :term
 
     def self.create_from_json(json)
+      return nil unless json
+
       Category.new.tap do |category|
         category.scheme = json.andand['scheme']
         category.term = json.andand['term']

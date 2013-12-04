@@ -4,6 +4,8 @@ module GoogleContactsApiV3
     alias :description :label
 
     def self.create_from_json(json)
+      return nil unless json
+
       Website.new.tap do |website|
         website.href = json['href']
         website.rel = json['rel']

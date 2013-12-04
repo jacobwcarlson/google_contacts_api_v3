@@ -3,6 +3,8 @@ module GoogleContactsApiV3
     attr_accessor :version, :encoding, :feed
 
     def self.create_from_json(json)
+      return nil unless json
+
       Response.new.tap do |response|
         response.version = json['version']
         response.encoding = json['encoding']

@@ -5,6 +5,8 @@ module GoogleContactsApiV3
     attr_accessor :address, :display_name, :label, :primary, :rel, :type
 
     def self.create_from_json(json)
+      return nil unless json
+
       EmailAddress.new.tap do |email|
         email.address = json['address']
         email.display_name = json['displayName']

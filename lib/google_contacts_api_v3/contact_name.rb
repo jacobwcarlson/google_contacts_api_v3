@@ -9,6 +9,8 @@ module GoogleContactsApiV3
     alias :suffix :name_suffix
 
     def self.create_from_json(json)
+      return nil unless json
+
       ContactName.new.tap do |name|
         name.full_name = json['gd$fullName'].andand['$t']
         name.given_name = json['gd$givenName'].andand['$t']

@@ -3,6 +3,8 @@ module GoogleContactsApiV3
     attr_accessor :rel, :type, :href
 
     def self.create_from_json(json)
+      return nil unless json
+
       Link.new.tap do |link|
         link.rel = json.andand['rel']
         link.type = json.andand['type']
