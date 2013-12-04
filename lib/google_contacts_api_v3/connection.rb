@@ -20,10 +20,11 @@ module GoogleContactsApiV3
     # is not nil (and is a valid DateTime object) it will only return contacts
     # modified since that time.
     def get_contacts(args = {})
-      path = DEFAULT_JSON_CONTACTS_PATH.tap do |path|
-        path.concat "&updated-min=" + args[:since].andand.iso8601
-        path.concat "&max-results=1000"
+      since = args[:since].andand do |since|
+        "&updated-min=" + since.iso8601.gsub(/\+.*$/, "")
       end
+
+      path = format "%s%s&max-results=1000", DEFAULT_JSON_CONTACTS_PATH, since 
 
       connect
       contacts = []
